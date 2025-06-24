@@ -34,6 +34,11 @@ export const signin = async (req, res, next) => {
 };
 
 export const google = async (req, res, next) => {
+  console.log("Received Google data:", req.body);
+  if (!req.body.email || !req.body.name || !req.body.photo) {
+    return next(errorHandler(400, "Missing required fields!"));
+  }
+
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
@@ -56,7 +61,11 @@ export const google = async (req, res, next) => {
         password: hashedPassword,
         avatar: req.body.photo,
       });
+      console.log("Creating new Google user...");
+
       await newUser.save();
+      console.log("✅ User saved:", newUser);
+
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
       const { password: pass, ...rest } = newUser._doc;
       res
