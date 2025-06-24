@@ -1,75 +1,70 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
   signInSuccess,
   signInFailure,
-  signOut,
 } from "../redux/user/userSlice";
 
 const SignIn = () => {
-  // Store form input values (username, email, password)
+  // State to store form input values (email and password)
   const [formData, setFormData] = useState({});
-  // Store any error message returned from the API
-  const [error, setError] = useState(null);
-  // Indicate whether the form is currently submitting
-  const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate(); // Allows redirection after signup
+  const dispatch = useDispatch(); // Used to dispatch Redux actions
+  const { loading, error } = useSelector((state) => state.user); // Get loading/error state from Redux store
 
-  // Update formData state as the user types in input fields
+  const navigate = useNavigate(); // Allows navigation programmatically
+
+  // Handle input changes and update formData state
   const handleChange = (e) => {
     setFormData({
-      ...formData,
-      [e.target.name]: e.target.value, // Use input name as the key
+      ...formData, // Keep existing values
+      [e.target.name]: e.target.value, // Update the changed field
     });
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page reload
-    setError(null); // Clear any previous error
-    setLoading(true); // Set loading state while waiting for response
+    e.preventDefault(); // Prevent page refresh
+
+    dispatch(signInStart()); // Set loading to true and clear any previous errors
 
     try {
-      // Send POST request to signup endpoint with form data
+      // Send POST request to backend API with form data
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Sending JSON
+          "Content-Type": "application/json", // Tells server to expect JSON
         },
-        body: JSON.stringify(formData), // Convert formData to JSON
+        body: JSON.stringify(formData), // Convert form data to JSON
       });
 
-      const data = await res.json(); // Parse server response
+      const data = await res.json(); // Parse response
 
-      // If request failed, show error message
+      // If the response is not OK, dispatch error
       if (!res.ok) {
-        setError(data.message || "Something went wrong.");
+        dispatch(signInFailure(data.message)); // Set error message in Redux
         return;
       }
 
-      // On success: stop loading, clear errors, and redirect to Sign In
-      setLoading(false);
-      setError(null);
-      navigate("/"); // Redirect to home page after successful sign-in
-      console.log("SignIn successful:", data);
+      // Success: store user in Redux and navigate to home page
+      dispatch(signInSuccess(data));
+      navigate("/"); // Redirect to homepage
     } catch (err) {
-      // Catch and display network or server error
-      setError(err.message || "Network error.");
-    } finally {
-      setLoading(false); // Always stop loading, even on error
+      // Catch any network/server error and dispatch failure
+      dispatch(signInFailure(err.message || "Network error."));
     }
   };
 
   return (
     <div className="p-3 max-w-lg mx-auto">
+      {/* Title */}
       <h1 className="text-3xl text-center font-semibold my-7">Sign-In</h1>
 
-      {/* Sign In Form */}
+      {/* Form for user login */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Email field */}
+        {/* Email input */}
         <input
           type="email"
           id="email"
@@ -80,7 +75,7 @@ const SignIn = () => {
           onChange={handleChange}
         />
 
-        {/* Password field */}
+        {/* Password input */}
         <input
           type="password"
           id="password"
@@ -95,21 +90,21 @@ const SignIn = () => {
         <button
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
           type="submit"
-          disabled={loading} // Prevent clicking while loading
+          disabled={loading} // Disable while loading
         >
-          {loading ? "Loading..." : "Sign In"}
+          {loading ? "Loading..." : "Sign In"} {/* Show loading state */}
         </button>
       </form>
 
-      {/* Redirect to sign in if user already has an account */}
+      {/* Redirect to sign-up if no account */}
       <div className="flex gap-2 mt-5">
         <p>Don't have an account?</p>
         <Link to="/signup" className="text-blue-700 cursor-pointer">
-          <span>Sign In</span>
+          <span>Sign Up</span>
         </Link>
       </div>
 
-      {/* Display any error message */}
+      {/* Error message display */}
       {error && (
         <div className="bg-red-100 text-red-500 p-3 rounded-lg mt-5">
           {error}
