@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   // Store form input values (username, email, password)
@@ -68,33 +69,27 @@ const SignUp = () => {
           id="username"
           name="username"
           placeholder="Username"
-          required
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg border-gray-300"
           onChange={handleChange}
         />
-
         {/* Email field */}
         <input
           type="email"
           id="email"
           name="email"
           placeholder="Email"
-          required
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg border-gray-300"
           onChange={handleChange}
         />
-
         {/* Password field */}
         <input
           type="password"
           id="password"
           name="password"
           placeholder="Password"
-          required
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg border-gray-300"
           onChange={handleChange}
         />
-
         {/* Submit button */}
         <button
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
@@ -103,6 +98,7 @@ const SignUp = () => {
         >
           {loading ? "Loading..." : "Sign Up"}
         </button>
+        <OAuth /> {/* OAuth component for Gmail login */}
       </form>
 
       {/* Redirect to sign in if user already has an account */}

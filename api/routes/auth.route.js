@@ -1,9 +1,16 @@
 import express from "express";
-import { signin, signup } from "../controllers/auth.controller.js"; // Import the signup controller from the auth controller module
+import {
+  google,
+  signOut,
+  signin,
+  signup,
+} from "../controllers/auth.controller.js";
 
-const router = express.Router(); // Create a new Express router instance
+const router = express.Router();
 
-router.post("/signup", signup); // Define a POST route for user signup, using the signup controller
-router.post("/signin", signin); // Define a POST route for user login, using the signup controller (this should be replaced with the actual login controller)
+router.post("/signup", signup);
+router.post("/signin", signin);
+router.post("/google", google);
+router.get("/signout", signOut);
 
-export default router; // Export the router to be used in other parts of the application
+export default router;

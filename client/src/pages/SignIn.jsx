@@ -6,6 +6,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   // State to store form input values (email and password)
@@ -70,22 +71,18 @@ const SignIn = () => {
           id="email"
           name="email"
           placeholder="Email"
-          required
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg border-gray-300"
           onChange={handleChange}
         />
-
         {/* Password input */}
         <input
           type="password"
           id="password"
           name="password"
           placeholder="Password"
-          required
-          className="border p-3 rounded-lg"
+          className="border p-3 rounded-lg border-gray-300"
           onChange={handleChange}
         />
-
         {/* Submit button */}
         <button
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
@@ -94,6 +91,7 @@ const SignIn = () => {
         >
           {loading ? "Loading..." : "Sign In"} {/* Show loading state */}
         </button>
+        <OAuth /> {/* OAuth component for Gmail login */}
       </form>
 
       {/* Redirect to sign-up if no account */}

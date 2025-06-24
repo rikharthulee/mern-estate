@@ -8,8 +8,8 @@ const Header = () => {
       <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
-            <span className="text-slate-500">Coding Cleverly</span>
-            <span className="text-slate-700">Estate</span>
+            <span className="text-slate-500">Laos</span>
+            <span className="text-slate-700">Real Estate</span>
           </h1>
         </Link>
         <form className="bg-slate-100 p-3 rounded-lg flex items-center">
