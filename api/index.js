@@ -3,6 +3,7 @@ import userRouter from "./routes/user.route.js"; // Import user routes for handl
 import authRouter from "./routes/auth.route.js"; // Import authentication routes for handling auth-related requests
 import dotenv from "dotenv"; // Load environment variables from .env file - keeps sensitive data out of code
 import mongoose from "mongoose"; // Import mongoose for MongoDB interactions
+import cookieParser from "cookie-parser"; // Middleware to parse cookies from requests
 dotenv.config(); // Ensure dotenv is loaded before any other imports that might use process.env
 
 mongoose // Connect to MongoDB using the URI from environment variables
@@ -16,6 +17,8 @@ mongoose // Connect to MongoDB using the URI from environment variables
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON request bodies
+
+app.use(cookieParser());
 
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
